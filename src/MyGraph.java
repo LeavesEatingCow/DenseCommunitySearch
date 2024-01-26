@@ -145,9 +145,6 @@ public class MyGraph {
     }
 
     public MyEdge getEdge(int u, int v) {
-        if(g.get(u) == null) {
-            System.out.println("u" + u + "\t" + "v" +v);
-        }
         return g.get(u).get(v);
     }
 
@@ -214,24 +211,27 @@ public class MyGraph {
     }
 
 
-    public void read_GraphEdgelist(String fileName) throws IOException {
+    public void read_GraphEdgelist(String fileName, String dlim) throws IOException {
         g = new HashMap<Integer, HashMap<Integer, MyEdge>>();
         FileReader reader = new FileReader(fileName);
         BufferedReader br = new BufferedReader(reader);
         String line;
-        br.readLine();
+        if(!dlim.equals(",")) {
+            br.readLine();
+        }
         while ((line = br.readLine()) != null)
-            processLine(line);
+            processLine(line, dlim);
         br.close();
         System.out.println("v" + g.size());
         System.out.println("e" + numberOfEdge);
         // int size = g.size() * 4 + numberOfEdge * 8;
     }
 
-    protected int processLine(String aLine) {
+
+    protected int processLine(String aLine, String delim) {
         StringTokenizer st;
         int id1, id2;
-        st = new StringTokenizer(aLine, " ");
+        st = new StringTokenizer(aLine, delim);
         id1 = Integer.parseInt(st.nextToken().trim());
         id2 = Integer.parseInt(st.nextToken().trim());
         if (id1 == id2)

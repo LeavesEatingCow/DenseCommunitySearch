@@ -1,3 +1,5 @@
+import com.sun.security.jgss.GSSUtil;
+
 import java.io.*;
 import java.util.*;
 
@@ -134,7 +136,7 @@ public class Main {
         // Set parameters
         nq = 100;
         qs = 2;
-        qt = 5;
+        qt = 2;
         type = "edge";
 
 
@@ -144,8 +146,9 @@ public class Main {
         DenseIndex dense;
         Util.createDir(pathtec);
         long startTime = System.nanoTime();
-        g.read_GraphEdgelist(fileName);
+        g.read_GraphEdgelist(fileName, " ");
         long endTime = System.nanoTime();
+        int numOfVerticies = g.numberOfVertices();
         long totalTime = 0;
         int  numberOfIterations = 10;
         dense = new DenseIndex();
@@ -175,9 +178,12 @@ public class Main {
                 denseFN = pathtecType.concat("_cored.txt");
             } else {
                 denseFN = pathtec.concat(sfString + "_K-ecc_" + fileName.substring("data/".length()));
+                g_subgraph = new MyGraph();
+                g_subgraph.read_GraphEdgelist(denseFN, ",");
                 System.out.println("This is densedFN: " + denseFN);
             }
 
+            System.out.println("The num of v is: " + numOfVerticies);
 
             startTime = System.nanoTime();
             int maxk = Util.readDensef(g_subgraph, denseFN, densed);
@@ -233,7 +239,7 @@ public class Main {
             {
                 for(int i = 0; i < numberOfIterations; i++) {
                     startTime = System.nanoTime();
-                    QuerySetCre.createQuerySet(g_subgraph, densed, qt, qs, nq, lq);
+                    QuerySetCre.createQuerySet(g_subgraph, numOfVerticies, densed, qt, qs, nq, lq);
                     endTime = System.nanoTime();
                     totalTime += (endTime - startTime);
                 }

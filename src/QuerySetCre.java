@@ -38,7 +38,7 @@ public class QuerySetCre {
     //Create query set based on distance and given density (trussness/kcore/kednge) value  and distance=2
     //qs_size=query set size (100)
     // q_size= how many nodes in a query set
-    public static void createQuerySet(MyGraph g, Map<MyEdge, Integer> densed, int q_density, int q_size, int qs_size, List<int[]> lq) {
+    public static void createQuerySet(MyGraph g, int numOfV, Map<MyEdge, Integer> densed, int q_density, int q_size, int qs_size, List<int[]> lq) {
         System.out.println("creating queryset");
         Random r = new Random();
         int t;
@@ -49,7 +49,7 @@ public class QuerySetCre {
             pos = new ArrayList<Integer>();
             int j = 0;
             while (true) {
-                int qq = r.nextInt(g.numberOfVertices());// select a node randomly
+                int qq = r.nextInt(numOfV);// select a node randomly
                 //qq=18089;
                 qset = new HashSet<Integer>();
                 qset.add(qq);
@@ -83,26 +83,6 @@ public class QuerySetCre {
         }
     }
 
-    public static Set<Integer> chooseQueryVertices(MyGraph g, int numQueryVertices) {
-        Set<Integer> queryVertices = new HashSet<>();
-
-        // Check if the graph size is less than the desired number of query vertices
-        if (g.getVertexSet().size() <= numQueryVertices) {
-            queryVertices.addAll(g.getVertexSet());
-        } else {
-            Random random = new Random();
-            List<Integer> vertexList = new ArrayList<>(g.getVertexSet());
-
-            while (queryVertices.size() < numQueryVertices) {
-                int randomIndex = random.nextInt(vertexList.size());
-                int randomVertex = vertexList.get(randomIndex);
-                queryVertices.add(randomVertex);
-                vertexList.remove(randomIndex);  // Remove the selected vertex to avoid duplicates
-            }
-        }
-
-        return queryVertices;
-    }
 
 
 // create query set for test based on degree of nodes
