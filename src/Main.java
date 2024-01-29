@@ -11,7 +11,7 @@ public class Main {
         String fileName, comfile ,query_file= "";
         String pathtec;
         args= new String[2];
-        args[0]="a";
+        args[0]="c";
         args[1]="4";
         if (args[0].equals("l"))
         {
@@ -137,7 +137,7 @@ public class Main {
         nq = 100;
         qs = 2;
         qt = 2;
-        type = "edge";
+        type = "truss";
 
 
         MyGraph g = new MyGraph();
@@ -179,7 +179,7 @@ public class Main {
             } else {
                 denseFN = pathtec.concat(sfString + "_K-ecc_" + fileName.substring("data/".length()));
                 g_subgraph = new MyGraph();
-                g_subgraph.read_GraphEdgelist(denseFN, ",");
+                g_subgraph.read_GraphEdgelist( denseFN, ",");
                 System.out.println("This is densedFN: " + denseFN);
             }
 
@@ -264,7 +264,7 @@ public class Main {
                     e.printStackTrace();
                 }
 
-                QuerySetCre.writeQuerySet(lq, query_file, qs, qt);
+                QuerySetCre.writeQuerySet(lq,  query_file, qs, qt);
             }
             else
                 QuerySetCre.readQueryFile(query_file,lq,qs,qt);
