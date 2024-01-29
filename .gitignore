@@ -6,6 +6,11 @@ out/
 
 # Compiled class file
 *.class
+CondMat/
+Data/
+GrQc/
+tecclamzsbfn/
+teccldblpsb/
 
 ### Eclipse ###
 .apt_generated
