@@ -15,72 +15,72 @@ public class Main {
         args[1]="4";
         if (args[0].equals("l"))
         {
-            fileName = "data/com-lj.ungraph.txt";
-            query_file="data/lj_q.txt";
+            fileName = "Data/com-lj.ungraph.txt";
+            query_file="Data/lj_q.txt";
             pathtec = "tecclljfn/";
-            comfile = "data/com-lj.top5000.cmty.txt";
+            comfile = "Data/com-lj.top5000.cmty.txt";
         }
         else if (args[0].equals("d"))
         {
-            fileName = "data/com-dblp.ungraph.txt";
-            query_file="data/dblp_";
+            fileName = "Data/com-dblp.ungraph.txt";
+            query_file="Data/dblp_";
             pathtec = "teccldblpsb/";
-            comfile = "data/com-dblp.top5000.cmty.txt";
+            comfile = "Data/com-dblp.top5000.cmty.txt";
         }
         else if (args[0].equals("a"))
         {
-            fileName = "data/com-amazon.ungraph.txt";
-            query_file="data/amz_";
+            fileName = "Data/com-amazon.ungraph.txt";
+            query_file="Data/amz_";
             pathtec = "tecclamzsbfn/";
         }
         else if (args[0].equals("o"))
         {
-            fileName = "data/com-orkut.ungraph.txt";
-            query_file="data/orkut_";
+            fileName = "Data/com-orkut.ungraph.txt";
+            query_file="Data/orkut_";
             pathtec = "tecclorkfn/";
         }
         else if (args[0].equals("y"))
         {
-            fileName = "data/com-youtube.ungraph.txt";
-            query_file="data/youtube_";
+            fileName = "Data/com-youtube.ungraph.txt";
+            query_file="Data/youtube_";
             pathtec = "tecclyt/";
         }
         else if (args[0].equals("f"))
         {
-            fileName = "data/facebook_combined.txt";
-            query_file="data/facebook_";
+            fileName = "Data/facebook_combined.txt";
+            query_file="Data/facebook_";
             pathtec = "tecclfb/";
         }
         else if (args[0].equals("e"))
         {
-            fileName = "data/email-Eu-core.txt";
-            query_file="data/email_";
+            fileName = "Data/email-Eu-core.txt";
+            query_file="Data/email_";
             pathtec = "tecclemeu/";
         }
         else if (args[0].equals("w"))
         {
-            fileName = "data/wiki-topcats.txt";
-            query_file="data/wiki_";
+            fileName = "Data/wiki-topcats.txt";
+            query_file="Data/wiki_";
             pathtec = "tecclwiki/";
         }
         else if (args[0].equals("c"))
         {
-            fileName = "data/CA-CondMat.txt";
-            query_file="data/CondMat_";
+            fileName = "Data/CA-CondMat.txt";
+            query_file="Data/CondMat_";
             pathtec = "CondMat/";
         }
         else if (args[0].equals("g"))
         {
-            fileName = "data/CA-GrQc.txt";
-            query_file="data/GrQc_";
+            fileName = "Data/CA-GrQc.txt";
+            query_file="Data/GrQc_";
             pathtec = "GrQc/";
         }
 
 
 
         else {
-            fileName = "data/4area.txt";
-            query_file="data/4area_";
+            fileName = "Data/4area.txt";
+            query_file="Data/4area_";
             pathtec = "tecc44/";
 
         }
@@ -163,7 +163,7 @@ public class Main {
             g_subgraph = g.createSubgraph(sf);
             densed = new HashMap<MyEdge, Integer>(g_subgraph.numberOfEdge);
             String sfString = String.format("%.1f", sf);
-            String pathtecType = pathtec.concat(sfString + "_" + fileName.substring("data/".length()));
+            String pathtecType = pathtec.concat(sfString + "_" + fileName.substring("Data/".length()));
 
             if (type.equals("truss")) {
                 Truss.computeTruss(g_subgraph, densed, klistdict, 1);//calculate ktruss values
@@ -177,7 +177,7 @@ public class Main {
                 kcore.write_core(pathtecType + "_cored.txt", densed);//write calculated kcore values to file
                 denseFN = pathtecType.concat("_cored.txt");
             } else {
-                denseFN = pathtec.concat(sfString + "_K-ecc_" + fileName.substring("data/".length()));
+                denseFN = pathtec.concat(sfString + "_K-ecc_" + fileName.substring("Data/".length()));
                 g_subgraph = new MyGraph();
                 g_subgraph.read_GraphEdgelist( denseFN, ",");
                 System.out.println("This is densedFN: " + denseFN);
