@@ -85,6 +85,7 @@ public class QuerySetCre {
 
 
 
+
 // create query set for test based on degree of nodes
 //qs query size,
 //lq : created query set
@@ -100,7 +101,7 @@ public class QuerySetCre {
 
         ArrayList<Integer> vl = new ArrayList<>();
         vl.addAll(g.g.keySet());
-        md = 10;// can be given as parameter or use upper commentted lines
+//        md = 10;// can be given as parameter or use upper commentted lines
         Random r = new Random();
         int qq = 0;
         Set<Integer> qset = new HashSet<Integer>();
