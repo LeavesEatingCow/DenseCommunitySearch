@@ -216,9 +216,9 @@ public class MyGraph {
         FileReader reader = new FileReader(fileName);
         BufferedReader br = new BufferedReader(reader);
         String line;
-        if(!dlim.equals(",")) {
+//        if(!dlim.equals(",")) {
             br.readLine();
-        }
+//        }
         while ((line = br.readLine()) != null)
             processLine(line, dlim);
         br.close();

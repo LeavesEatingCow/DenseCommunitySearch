@@ -157,8 +157,9 @@ public class DenseIndex {
         }
     }*/
 
-    public void writeIndex(String path) throws IOException {
-        FileWriter fileWriter = new FileWriter(path.concat("allcommunities.txt"));
+    public void writeIndex(String path, double sf, String type) throws IOException {
+        String sfString = String.format("%.1f", sf);
+        FileWriter fileWriter = new FileWriter(path + "/Indexes/" + sfString + "_" + type + "_allcommunities.txt");
         BufferedWriter bw = new BufferedWriter(fileWriter);
         for (Integer sid : idtoSN.keySet()) {
             MyNode sg = idtoSN.get(sid);
@@ -177,7 +178,7 @@ public class DenseIndex {
             }
         }
         bw.close();
-        fileWriter = new FileWriter(path.concat("ogn_ign_dic.txt"));// original
+        fileWriter = new FileWriter(path + "/Indexes/" + sfString + "_" + type + "_ogn_ign_dic.txt");// original
         // graph
         // nodes to
         // index
@@ -196,7 +197,7 @@ public class DenseIndex {
             bw.write("\n");
         }
         bw.close();
-        fileWriter = new FileWriter(path.concat("DenseIndexGraph.txt"));// index
+        fileWriter = new FileWriter(path + "/Indexes/" + sfString + "_" + type + "_DenseIndexGraph.txt");// index
         // graph
         // edge
         // list
@@ -207,7 +208,7 @@ public class DenseIndex {
                 bw.write(v + "," + n + "," + ( indexGraph.getEdge(v, n)).w + "\n");
         }
         bw.close();
-        fileWriter = new FileWriter(path.concat("mstIndexGraph.txt"));// index
+        fileWriter = new FileWriter(path + "/Indexes/" + sfString + "_" + type + "_mstIndexGraph.txt");// index
         // graph
         // edge
         // list
@@ -221,13 +222,13 @@ public class DenseIndex {
     }
 
 
-    public void readIndex(String path, MyGraph mg) throws IOException {
+    public void readIndex(String path, MyGraph mg, double sf, String type) throws IOException {
 //		tec.visitedVd = new HashMap<Integer, ArrayList<Integer>>();
 //		tec.cciddict = new HashMap<Integer, Node>();
         // trussGraph=new HashMap<Integer, Set<Integer>>();
 //		?indexGraph = new MyGraph();
-
-        FileReader fileWriter = new FileReader(path.concat("allcommunities.txt"));
+        String sfString = String.format("%.1f", sf);
+        FileReader fileWriter = new FileReader(path + "/Indexes/" + sfString + "_" + type + "_allcommunities.txt");
         BufferedReader br = new BufferedReader(fileWriter);
 
         String line = br.readLine();
@@ -243,7 +244,7 @@ public class DenseIndex {
                 truss = Integer.parseInt(sr[3]);
                 sg = new MyNode(truss, id);
             } else {
-//				System.out.println(sr[0]+" "+sr[1]);
+//                System.out.println(sr[0] + " " + sr[1]);
                 if (mg.getEdge(Integer.parseInt(sr[0]), Integer.parseInt(sr[1])) != null) {
                     // MyEdge e = mg.getEdge(Integer.parseInt(sr[0]),
                     // Integer.parseInt(sr[1]));
@@ -274,7 +275,7 @@ public class DenseIndex {
         }
 
         System.out.println("dictionary read");
-        br = new BufferedReader(new FileReader(path.concat("DenseIndexGraph.txt")));
+        br = new BufferedReader(new FileReader(path + "/Indexes/" + sfString + "_" + type + "_DenseIndexGraph.txt"));
         int v1, v2;
         int w;
         int kmax=1;
@@ -291,7 +292,7 @@ public class DenseIndex {
         }
         br.close();
         System.out.println("index graph read");
-        br = new BufferedReader(new FileReader(path.concat("mstIndexGraph.txt")));
+        br = new BufferedReader(new FileReader(path + "/Indexes/" + sfString + "_" + type + "_mstIndexGraph.txt"));
 
         while ((line = br.readLine()) != null) {
             if (line.equals("vertex"))
