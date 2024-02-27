@@ -190,7 +190,7 @@ public class Main {
                 }
                 densed = new HashMap<MyEdge, Integer>(g_subgraph.numberOfEdge);
                 String sfString = String.format("%.1f", sf);
-                String pathtecType = pathtec.concat(sfString + "_" + fileName.substring("Data/".length()));
+                String pathtecType = pathtec.concat(sfString + "_" + fileName.substring("Data/".length(), fileName.length() - ".txt".length()));
 
                 if (type.equals("truss")) {
                     Truss.computeTruss(g_subgraph, densed, klistdict, 1);//calculate ktruss values
