@@ -10,6 +10,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         String fileName, comfile ,query_file= "";
         String pathtec;
+        int KMax = 6;
         String dlim = "\t";
 //        args= new String[2];
 //        args[0]="l";
@@ -20,6 +21,7 @@ public class Main {
             query_file="Data/lj_q.txt";
             pathtec = "tecclljfn/";
             comfile = "Data/com-lj.top5000.cmty.txt";
+            KMax = 8;
         }
         else if (args[0].equals("d"))
         {
@@ -27,18 +29,21 @@ public class Main {
             query_file="Data/dblp_";
             pathtec = "teccldblpsb/";
             comfile = "Data/com-dblp.top5000.cmty.txt";
+            KMax = 7;
         }
         else if (args[0].equals("a"))
         {
             fileName = "Data/com-amazon.ungraph.txt";
             query_file="Data/amz_";
             pathtec = "tecclamzsbfn/";
+            dlim = " ";
         }
         else if (args[0].equals("o"))
         {
             fileName = "Data/com-orkut.ungraph.txt";
             query_file="Data/orkut_";
             pathtec = "tecclorkfn/";
+            KMax = 10;
         }
         else if (args[0].equals("y"))
         {
@@ -77,6 +82,13 @@ public class Main {
             query_file="Data/GrQc_";
             pathtec = "GrQc/";
             dlim = " ";
+        }
+        else if (args[0].equals("u"))
+        {
+            fileName = "Data/uk-2002.txt";
+            query_file="Data/uk-2002_";
+            pathtec = "teccluk/";
+            KMax = 10;
         }
 
 
@@ -164,6 +176,7 @@ public class Main {
         String denseFN = "";
         Map<Integer, LinkedHashSet<MyEdge>> klistdict = new HashMap<Integer, LinkedHashSet<MyEdge>>();
         double averageTime = 0.0;
+        int[] qsArray = {2, 3, 5, 8, 16};
 
 
 
@@ -209,21 +222,22 @@ public class Main {
                     startTime = System.nanoTime();
                     dense.constructIndex(klistdict, densed, g_subgraph);
                     endTime = System.nanoTime();
-                    StringBuilder existingContent = new StringBuilder();
-                    try (BufferedReader reader = new BufferedReader(new FileReader(denseFN))) {
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            existingContent.append(line).append(System.lineSeparator());
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                    StringBuilder existingContent = new StringBuilder();
+//                    try (BufferedReader reader = new BufferedReader(new FileReader(denseFN))) {
+//                        String line;
+//                        while ((line = reader.readLine()) != null) {
+//                            existingContent.append(line).append(System.lineSeparator());
+//                        }
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
 
 // Write index creation time at the beginning of the file
-                    try (PrintWriter writer = new PrintWriter(denseFN)) {
+                    try (PrintWriter writer = new PrintWriter(new FileWriter(pathtec + "/IndexTime/" + type + ".txt", true))) {
+                        writer.println(sfString);
                         writer.println("index creation time:" + ((endTime - startTime) / (1000000000.0)));
                         // Append the existing content back to the file
-                        writer.print(existingContent);
+//                        writer.print(existingContent);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -258,6 +272,8 @@ public class Main {
                 } else if (type.equals("core")) {
                     densed = kcore.edgeCorecomputation(g_subgraph); //to calculate kcore values if not calculated before
                 } else {
+                    int maxk = Util.readDensef(g_subgraph, denseFN, densed);
+                    Util.createKlist(g_subgraph, densed, klistdict, maxk);
                 }
 
 
@@ -339,7 +355,7 @@ public class Main {
                     while (distance <= 5) {
                         for (int i = 0; i < numberOfIterations; i++) {
                             startTime = System.nanoTime();
-                            QuerySetCre.createQuerySet(g_subgraph, numOfVerticies, densed, qt, qs, nq, lq, distance);
+                            QuerySetCre.createQuerySetDynamicDistance(g_subgraph, numOfVerticies, densed, qt, qs, nq,distance , lq);
                             endTime = System.nanoTime();
                             totalTime += (endTime - startTime);
                         }
@@ -368,7 +384,38 @@ public class Main {
                         distance++;
                     }
 
-                    while (qt <= 2) {
+                    for (int x : qsArray) {
+                        for (int i = 0; i < numberOfIterations; i++) {
+                            startTime = System.nanoTime();
+                            QuerySetCre.createQuerySet(g_subgraph, numOfVerticies, densed, qt, x, nq, lq);
+                            endTime = System.nanoTime();
+                            totalTime += (endTime - startTime);
+                        }
+                        averageTime = (double) totalTime / (numberOfIterations * (1000000000.0));
+                        StringBuilder existingContent = new StringBuilder();
+                        try (BufferedReader reader = new BufferedReader(new FileReader(denseFN))) {
+                            String line;
+                            while ((line = reader.readLine()) != null) {
+                                existingContent.append(line).append(System.lineSeparator());
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        System.out.println("This is DenseNF: " + denseFN);
+
+                        // Write index creation time at the beginning of the file
+                        try (PrintWriter writer = new PrintWriter(denseFN)) {
+                            writer.println("Query Size: " + x + " query time:" + averageTime);
+                            // Append the existing content back to the file
+                            writer.print(existingContent);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        QuerySetCre.writeQuerySet(lq, query_file, qs, qt);
+                    }
+
+                    while (qt <= KMax) {
                         for (int i = 0; i < numberOfIterations; i++) {
                             startTime = System.nanoTime();
                             QuerySetCre.createQuerySet(g_subgraph, numOfVerticies, densed, qt, qs, nq, lq);

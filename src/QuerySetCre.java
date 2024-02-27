@@ -83,45 +83,50 @@ public class QuerySetCre {
         }
     }
 
-    public static void createQuerySet(MyGraph g, int numOfV, Map<MyEdge, Integer> densed, int q_density, int q_size, int qs_size, List<int[]> lq, int distance) {
+    public static void createQuerySetDynamicDistance(MyGraph g, int numOfV, Map<MyEdge, Integer> densed, int q_density, int q_size, int qs_size, int distance, List<int[]> lq) {
         System.out.println("creating queryset");
         Random r = new Random();
         Set<Integer> qset;
         for (int x = 0; x < qs_size; x++) {
             int[] query = new int[q_size];
+            ArrayList<Integer> pos = new ArrayList<>();
             int j = 0;
-            int qq = r.nextInt(numOfV);// select a node randomly
-            qset = new HashSet<Integer>();
-            qset.add(qq);
-            generateQuery(g, qq, densed, q_density, qset, query, j, q_size, distance);
+            while (true) {
+                int qq = r.nextInt(numOfV);// select a node randomly
+                qset = new HashSet<>();
+                qset.add(qq);
+                LinkedList<Integer> queue = new LinkedList<>();
+                queue.add(qq);
+                int currentDistance = 0;
+                while (!queue.isEmpty() && currentDistance < distance) {
+                    int size = queue.size();
+                    for (int i = 0; i < size; i++) {
+                        int currentNode = queue.poll();
+                        for (Integer n : g.getAddjList(currentNode)) {
+                            if (!qset.contains(n) && densed.get(g.getEdge(currentNode, n)) > q_density) {
+                                queue.add(n);
+                                qset.add(n);
+                            }
+                        }
+                    }
+                    currentDistance++;
+                }
+
+                if (qset.size() >= q_size) {
+                    for (Integer node : qset) {
+                        if (j < q_size) {
+                            query[j++] = node;
+                        } else {
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+
             lq.add(query);
         }
     }
-
-    private static void generateQuery(MyGraph g, int node, Map<MyEdge, Integer> densed, int q_density, Set<Integer> qset, int[] query, int j, int q_size, int distance) {
-        if (distance == 0) {
-            query[j-1] = node;
-            return;
-        }
-
-        if (query[q_size-1] != 0)
-            return;
-
-        for (Integer n : g.getAddjList(node)) {
-            if (query[q_size-1] != 0)
-                return;
-
-            if (densed.get(g.getEdge(node, n)) > q_density && !qset.contains(n)) {
-                qset.add(n);
-                if(distance == 1) {
-                    j++;
-                }
-                generateQuery(g, n, densed, q_density, qset, query, j, q_size, distance - 1);
-            }
-        }
-    }
-
-
 
 
 
@@ -202,4 +207,44 @@ public class QuerySetCre {
         }
         bw.close();
     }
+
+
+//    public static void createQuerySet(MyGraph g, int numOfV, Map<MyEdge, Integer> densed, int q_density, int q_size, int qs_size, List<int[]> lq, int distance) {
+//        System.out.println("creating queryset");
+//        Random r = new Random();
+//        Set<Integer> qset;
+//        for (int x = 0; x < qs_size; x++) {
+//            int[] query = new int[q_size];
+//            int j = 0;
+//            int qq = r.nextInt(numOfV);// select a node randomly
+//            qset = new HashSet<Integer>();
+//            qset.add(qq);
+//            generateQuery(g, qq, densed, q_density, qset, query, j, q_size, distance);
+//            lq.add(query);
+//        }
+//    }
+//
+//    private static void generateQuery(MyGraph g, int node, Map<MyEdge, Integer> densed, int q_density, Set<Integer> qset, int[] query, int j, int q_size, int distance) {
+//        if (distance == 0) {
+//            query[j-1] = node;
+//            return;
+//        }
+//
+//        if (query[q_size-1] != 0)
+//            return;
+//
+//        for (Integer n : g.getAddjList(node)) {
+//            if (query[q_size-1] != 0)
+//                return;
+//
+//            if (densed.get(g.getEdge(node, n)) > q_density && !qset.contains(n)) {
+//                qset.add(n);
+//                if(distance == 1) {
+//                    j++;
+//                }
+//                generateQuery(g, n, densed, q_density, qset, query, j, q_size, distance - 1);
+//            }
+//        }
+//    }
+
 }

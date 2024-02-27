@@ -321,23 +321,37 @@ public class MyGraph {
     public MyGraph createSubgraph(double scalingFactor) {
         MyGraph subgraph = new MyGraph();
 
-        // Randomly select s|V(G)| vertices
-        Set<Integer> selectedVertices = getRandomVertices(scalingFactor);
+        List<Integer> keysAsArray = new ArrayList<Integer>(g.keySet());
+        Random r = new Random();
 
-
-        // Add selected vertices to the subgraph
-        for (int v : selectedVertices) {
-//            subgraph.addEdge(v, v); // add self-loop for the selected vertex
-            int cnt = 1;
+        Set<Integer> selectedVertices = new HashSet<>();
+        while(subgraph.numberOfVertices() <= (scalingFactor * numberOfVertices())){
+            int v = keysAsArray.get(r.nextInt(keysAsArray.size()));
+            selectedVertices.add(v);
             for (int neighbor : getAddjList(v)) {
                 if (selectedVertices.contains(neighbor)) {
-
-
                     subgraph.addEdge(v, neighbor);
-                    cnt++;
                 }
             }
         }
+        System.out.println("There are " + subgraph.numberOfVertices() + " vertices in this subgraph." + "\tOut of " + numberOfVertices());
+
+
+                // Randomly select s|V(G)| vertices
+//        Set<Integer> selectedVertices = getRandomVertices(scalingFactor);
+//
+//
+//        // Add selected vertices to the subgraph
+//        for (int v : selectedVertices) {
+////            subgraph.addEdge(v, v); // add self-loop for the selected vertex
+//            for (int neighbor : getAddjList(v)) {
+//                if (selectedVertices.contains(neighbor)) {
+//
+//
+//                    subgraph.addEdge(v, neighbor);
+//                }
+//            }
+//        }
         return subgraph;
     }
 
