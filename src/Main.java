@@ -88,6 +88,7 @@ public class Main {
             fileName = "Data/uk-2002.txt";
             query_file="Data/uk-2002_";
             pathtec = "teccluk/";
+            dlim = " ";
             KMax = 10;
         }
 
